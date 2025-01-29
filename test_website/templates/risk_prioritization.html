@@ -1,129 +1,23 @@
-<!-- risk_prioritization.html -->
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Risk Prioritization - Risk Assessment{% endblock %}
+{% block title %}Prioritize Risks{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h1 class="mb-4">Risk Prioritization</h1>
-
-    <div class="row mb-4">
-        <!-- Risk Matrix -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Risk Matrix</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Impact ↓ Likelihood →</th>
-                                    {% for i in "12345" %}
-                                    <th class="text-center">{{ i }}</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in "54321" %}
-                                <tr>
-                                    <th class="text-center">{{ i }}</th>
-                                    {% for j in "12345" %}
-                                    <td class="text-center {% if i|add:j|divisibleby:2 %}bg-danger text-white{% else %}bg-warning{% endif %}">
-                                        {{ i|multiply:j }}
-                                    </td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Risk Summary -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Risk Summary</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card bg-danger text-white">
-                                <div class="card-body text-center">
-                                    <h6>High Risks</h6>
-                                    <h2>{{ high_risks_count }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card bg-warning">
-                                <div class="card-body text-center">
-                                    <h6>Medium Risks</h6>
-                                    <h2>{{ medium_risks_count }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card bg-success text-white">
-                                <div class="card-body text-center">
-                                    <h6>Low Risks</h6>
-                                    <h2>{{ low_risks_count }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Prioritized Risks Table -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Prioritized Risks</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Priority</th>
-                            <th>Risk Name</th>
-                            <th>Asset</th>
-                            <th>Risk Score</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for risk in risks %}
-                        <tr>
-                            <td>
-                                {% if risk.risk_score >= 7 %}
-                                    <span class="badge bg-danger">High</span>
-                                {% elif risk.risk_score >= 4 %}
-                                    <span class="badge bg-warning">Medium</span>
-                                {% else %}
-                                    <span class="badge bg-success">Low</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ risk.name }}</td>
-                            <td>{{ risk.asset.name }}</td>
-                            <td>{{ risk.risk_score }}</td>
-                            <td>{{ risk.status }}</td>
-                            <td>
-                                <a href="{% url 'risk_response' risk.id %}" class="btn btn-sm btn-primary">Response Plan</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+<h1>Prioritize Risks</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Risk Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for risk in risks %}
+            <tr>
+                <td>{{ risk.name }}</td>
+                <td>{{ risk.risk_score }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

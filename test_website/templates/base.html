@@ -1,4 +1,3 @@
-<!-- base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,22 +64,25 @@
                             <a href="{% url 'risk_planning' %}" class="nav-link">Risk Planning</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'asset_list' %}" class="nav-link">Assets</a>
+                            <a href="{% url 'asset_list' %}" class="nav-link">Identify Assets</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'vulnerability_analysis' %}" class="nav-link">Vulnerabilities</a>
+                            <a href="{% url 'vulnerability_analysis' %}" class="nav-link">Identify Vulnerabilities</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'threat_analysis' %}" class="nav-link">Threats</a>
+                            <a href="{% url 'threat_analysis' %}" class="nav-link">Identify Threats</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'risk_calculation' %}" class="nav-link">Risk Calculation</a>
+                            <a href="{% url 'risk_calculation' %}" class="nav-link">Analyze Threat Likelihood</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'risk_prioritization' %}" class="nav-link">Risk Prioritization</a>
+                            <a href="{% url 'risk_prioritization' %}" class="nav-link">Prioritize Risks</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'risk_monitoring' %}" class="nav-link">Risk Monitoring</a>
+                            <a href="{% url 'risk_response' risk_id=risk.pk %}" class="nav-link">Determine Risk Responses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'risk_monitoring' %}" class="nav-link">Monitor Risks</a>
                         </li>
                     </ul>
                 </div>

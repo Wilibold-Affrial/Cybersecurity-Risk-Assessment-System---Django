@@ -152,3 +152,8 @@ class RiskResponseForm(forms.ModelForm):
                 "A mitigation plan is required when status is set to 'mitigated'."
             )
         return mitigation_plan
+    
+class ImpactForm(forms.ModelForm):
+    class Meta:
+        model = Risk
+        fields = ['impact']

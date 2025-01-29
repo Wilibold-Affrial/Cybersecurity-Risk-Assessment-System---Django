@@ -1,171 +1,20 @@
-<!-- risk_monitoring.html -->
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Risk Monitoring - Risk Assessment{% endblock %}
+{% block title %}Monitor Risks{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h1 class="mb-4">Risk Monitoring Dashboard</h1>
+<h1>Monitor Risks</h1>
+<h3>Mitigated Risks</h3>
+<ul>
+    {% for risk in mitigated_risks %}
+        <li>{{ risk.name }} - Status: {{ risk.status }}</li>
+    {% endfor %}
+</ul>
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Risks</h5>
-                    <h2>{{ total_risks }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Mitigated</h5>
-                    <h2>{{ mitigated_risks }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">In Progress</h5>
-                    <h2>{{ in_progress_risks }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-danger text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Action</h5>
-                    <h2>{{ pending_risks }}</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Risk Status Table -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Risk Status Monitoring</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Risk Name</th>
-                            <th>Asset</th>
-                            <th>Status</th>
-                            <th>Last Updated</th>
-                            <th>Risk Score</th>
-                            <th>Mitigation Progress</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for risk in risks %}
-                        <tr>
-                            <td>{{ risk.name }}</td>
-                            <td>{{ risk.asset.name }}</td>
-                            <td>
-                                <span class="badge {% if risk.status == 'mitigated' %}bg-success{% elif risk.status == 'accepted' %}bg-warning{% else %}bg-danger{% endif %}">
-                                    {{ risk.status }}
-                                </span>
-                            </td>
-                            <td>{{ risk.updated_at|date:"M d, Y" }}</td>
-                            <td>
-                                <span class="badge {% if risk.risk_score >= 7 %}bg-danger{% elif risk.risk_score >= 4 %}bg-warning{% else %}bg-success{% endif %}">
-                                    {{ risk.risk_score }}
-                                </span>
-                            </td>
-                            <td>
-                                {% if risk.status == 'mitigated' %}
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%">100%</div>
-                                </div>
-                                {% elif risk.status == 'in_progress' %}
-                                <div class="progress">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 50%">50%</div>
-                                </div>
-                                {% else %}
-                                <div class="progress">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 0%">0%</div>
-                                </div>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'risk_response' risk.id %}" class="btn btn-sm btn-primary">Update</a>
-                                <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#historyModal{{ risk.id }}">History</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- History Modals -->
-{% for risk in risks %}
-<div class="modal fade" id="historyModal{{ risk.id }}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Risk History - {{ risk.name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="timeline">
-                    {% for history in risk.history.all %}
-                    <div class="timeline-item">
-                        <div class="timeline-date">{{ history.created_at|date:"M d, Y" }}</div>
-                        <div class="timeline-content">
-                            <h6>Status changed to: {{ history.status }}</h6>
-                            <p>{{ history.notes }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-{% endblock %}
-
-{% block extra_css %}
-<style>
-    .timeline {
-        position: relative;
-        padding: 20px 0;
-    }
-    .timeline-item {
-        padding: 20px 30px;
-        border-left: 2px solid #007bff;
-        position: relative;
-        margin-bottom: 20px;
-    }
-    .timeline-date {
-        font-weight: bold;
-        margin-bottom: 10px;
-        color: #6c757d;
-    }
-    .timeline-content {
-        padding-left: 20px;
-    }
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: -9px;
-        top: 28px;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #007bff;
-    }
-</style>
+<h3>Pending Risks</h3>
+<ul>
+    {% for risk in pending_risks %}
+        <li>{{ risk.name }} - Status: {{ risk.status }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
