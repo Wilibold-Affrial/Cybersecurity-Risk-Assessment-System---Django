@@ -1,0 +1,122 @@
+<!-- impact_analysis.html -->
+{% extends 'base.html' %}
+
+{% block title %}Impact Analysis - Risk Assessment{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">Impact Severity Analysis</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Impact Assessment Form</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Asset</label>
+                            <select class="form-select" name="asset" required>
+                                {% for asset in assets %}
+                                <option value="{{ asset.id }}">{{ asset.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Impact Categories</label>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <label class="form-label">Financial Impact</label>
+                                        <input type="range" class="form-range" min="1" max="10" name="financial_impact">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Operational Impact</label>
+                                        <input type="range" class="form-range" min="1" max="10" name="operational_impact">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Reputational Impact</label>
+                                        <input type="range" class="form-range" min="1" max="10" name="reputational_impact">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Calculate Impact</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Risk Calculator</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'risk_calculation' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Threat Likelihood (1-10)</label>
+                                <input type="number" class="form-control" name="likelihood" min="1" max="10" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Impact Severity (1-10)</label>
+                                <input type="number" class="form-control" name="impact" min="1" max="10" required>
+                            </div>
+                        </div>
+
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">Risk Score:</h6>
+                                <h2 id="riskScore" class="mb-0">-</h2>
+                                <div id="riskLevel" class="mt-2"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Calculate Risk</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Calculate risk score
+    function calculateRisk() {
+        const likelihood = document.querySelector('input[name="likelihood"]').value;
+        const impact = document.querySelector('input[name="impact"]').value;
+        
+        if (likelihood && impact) {
+            const score = (likelihood * impact) / 2;
+            document.getElementById('riskScore').textContent = score.toFixed(1);
+            
+            let levelClass = 'bg-success';
+            let levelText = 'Low';
+            
+            if (score >= 7) {
+                levelClass = 'bg-danger';
+                levelText = 'High';
+            } else if (score >= 4) {
+                levelClass = 'bg-warning';
+                levelText = 'Medium';
+            }
+            
+            document.getElementById('riskLevel').innerHTML = 
+                `<span class="badge ${levelClass}">${levelText} Risk</span>`;
+        }
+    }
+
+    // Add event listeners
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', calculateRisk);
+    });
+</script>
+{% endblock %}
